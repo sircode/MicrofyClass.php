@@ -132,6 +132,8 @@ Microfy::br();
 Microfy::c('Step A');
 ```
 
+More [Examples](https://itnb.com/MicrofyClass/)
+
 ---
 
 ## 🤝 Contributing
