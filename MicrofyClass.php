@@ -1,134 +1,92 @@
 <?php
-
+/**
+ * MicrofyClass.php
+ * v0.1.1 
+ * Author: SirCode
+ */
 class Microfy
 {
 
-    // General array accessor
-    public static function getArray(array $array, $key, $default = null)
+    // Safe array accessor
+    public static function val(array $array, $key, $default = null)
     {
         return $array[$key] ?? $default;
     }
 
-    // Shortcut for associative array access
-    public static function v(array $arr, $key, $default = '')
-    {
-        return $arr[$key] ?? $default;
-    }
-
-    // Access $_GET
+    // GET/POST/REQUEST
     public static function get($key, $default = '')
     {
-        return self::v($_GET, $key, $default);
+        return self::val($_GET, $key, $default);
     }
-
-    // Access $_POST
     public static function post($key, $default = '')
     {
-        return self::v($_POST, $key, $default);
+        return self::val($_POST, $key, $default);
     }
-
-    // Access $_REQUEST (or merged manually)
     public static function request($key, $default = '')
     {
         return $_POST[$key] ?? $_GET[$key] ?? $default;
-        // or: return self::v(array_merge($_POST, $_GET), $key, $default);
     }
 
-
-
-    /* Microfy::pp($_GET);
-    $name = Microfy::get('name', 'Guest');
-    $email = Microfy::getArray(['email' => 'test@test.com'], 'email', 'none'); */
-
-    // Internal helper for vars
-    public static function inputVars(array $keys, array $source, string $prefix = ''): array
+    // Extract specific keys
+    public static function extractKeys(array $keys, array $source, string $prefix = ''): array
     {
-        $result = [];
-
+        $out = [];
         foreach ($keys as $key) {
-            $result["{$prefix}{$key}"] = $source[$key] ?? '';
+            $out["{$prefix}{$key}"] = $source[$key] ?? '';
         }
-
-        return $result;
+        return $out;
     }
 
-    // Shortcuts for _input_vars()
-    public static function getVars(array $keys, string $prefix = ''): array
+    public static function getVars(array $keys, string $prefix = '')
     {
-        return self::inputVars($keys, $_GET, $prefix);
+        return self::extractKeys($keys, $_GET, $prefix);
     }
-
-    public static function postVars(array $keys, string $prefix = ''): array
+    public static function postVars(array $keys, string $prefix = '')
     {
-        return self::inputVars($keys, $_POST, $prefix);
+        return self::extractKeys($keys, $_POST, $prefix);
     }
-
-    public static function reqVars(array $keys, string $prefix = ''): array
+    public static function reqVars(array $keys, string $prefix = '')
     {
-        return self::inputVars($keys, $_REQUEST, $prefix);
+        return self::extractKeys($keys, $_REQUEST, $prefix);
     }
-
-    public static function getVarsPrefixed(array $keys): array
+    public static function getVarsWithPrefix(array $keys): array
     {
         return self::getVars($keys, 'get_');
     }
 
-    // Internal helper for mapped inputs
-    public static function inputAll(array $map, array $source): array
+    // Map & load key=>label or key=>[label,default]
+    public static function loadInputs(array $map, array $source): array
     {
-        $result = [];
-
-        foreach ($map as $varName => $info) {
-            if (is_array($info)) {
-                $key     = $info[0];
-                $default = $info[1] ?? '';
-            } else {
-                $key     = $info;
-                $default = '';
-            }
-
-            $result[$varName] = (isset($source[$key]) && $source[$key] !== '')
-                ? $source[$key]
-                : $default;
+        $out = [];
+        foreach ($map as $var => $rule) {
+            [$key, $default] = is_array($rule) ? $rule + ['', ''] : [$rule, ''];
+            $out[$var] = $source[$key] ?? $default;
         }
-
-        return $result;
+        return $out;
     }
 
-    // Shortcuts for _input_all()
-    public static function getAll(array $map): array
+    public static function getAll(array $map)
     {
-        return self::inputAll($map, $_GET);
+        return self::loadInputs($map, $_GET);
     }
-
-    public static function postAll(array $map): array
+    public static function postAll(array $map)
     {
-        return self::inputAll($map, $_POST);
+        return self::loadInputs($map, $_POST);
     }
-
-    public static function reqAll(array $map): array
+    public static function reqAll(array $map)
     {
-        return self::inputAll($map, $_REQUEST);
+        return self::loadInputs($map, $_REQUEST);
     }
 
-
-    /* 
-    //  Example Usage (in class style)
-    extract(Microfy::getVarsPrefixed(['path', 'id']));
-
-    // Equivalent to:
-    $_GET = ['path' => 'demo', 'id' => '42'];
-    // => $get_path = 'demo'; $get_id = '42';
-    */
-
-
-    // --- Hybrid extractor ---
-    public static function extractVars(array $source, array $allow, string $prefix = ''): void
+    // Export to $GLOBALS
+    public static function injectGlobals(array $source, array $allow, string $prefix = ''): void
     {
         foreach ($allow as $key) {
             $GLOBALS[$prefix . $key] = $source[$key] ?? '';
         }
     }
+
+
 
     // --- PDO connection ---
     public static function dbPdo($host, $dbname, $user, $pass, $charset = 'utf8mb4', $driver = 'mysql'): ?PDO
@@ -450,6 +408,17 @@ class Microfy
         self::json(['status' => 'fail', 'msg' => $msg]);
     }
 
+    public static function jsonArray(array $data): string
+{
+    return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+}
+
+public static function jsonString(string $msg, bool $ok = true): string
+{
+    return self::jsonArray(['status' => $ok ? 'ok' : 'fail', 'msg' => $msg]);
+}
+
+
     // --- STRING ---
 
     public static function slugify(string $string): string
@@ -524,15 +493,22 @@ class Microfy
         echo "<span" . self::classAttr($class) . ">$text</span>";
     }
 
-    public static function div(string $text = '', string $class = ''): void
-    {
-        echo "<div" . self::classAttr($class) . ">$text</div>";
-    }
-
+  public static function div(string $text, array $attrs = []): string {
+    $attrStr = self::buildAttr($attrs);
+    return "<div$attrStr>$text</div>";
+}
     public static function section(string $text = '', string $class = ''): void
     {
         echo "<section" . self::classAttr($class) . ">$text</section>";
     }
+
+    public static function buildAttr(array $attrs): string {
+    $parts = [];
+    foreach ($attrs as $k => $v) {
+        $parts[] = "$k=\"" . htmlspecialchars($v) . "\"";
+    }
+    return $parts ? ' ' . implode(' ', $parts) : '';
+}
 
     // --- CODE BLOCKS ---
 
