@@ -1,6 +1,8 @@
 ## MicrofyClass.php
 
-**Minimal utility helpers for everyday PHP tasks** (object-oriented version)
+**Minimal utility helpers for everyday PHP tasks** (object-oriented version) 
+
+Status: EXPERIMENTAL
 
 ---
 
