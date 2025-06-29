@@ -105,6 +105,7 @@ echo Microfy::now();
 $data = Microfy::jsonf('users.json');
 echo Microfy::a('example.com', 'Example');
 echo Microfy::htmlTable($data);
+echo Microfy::htmlTable($data, $class, $id);
 Microfy::cList(['apple', 'banana', 'cherry']);
 ```
 
