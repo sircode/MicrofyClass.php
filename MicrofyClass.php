@@ -326,27 +326,42 @@ class Microfy
         return "<a href=\"$href\"$targetAttr$classAttr>$text</a>";
     }
 
-    public static function htmlTable(array $array): string
-    {
-        if (empty($array)) return "<p><em>No data.</em></p>";
+     public static function htmlTable(array $array, string $class = '', string $id = ''): string
+{
+    if (empty($array)) return "<p><em>No data.</em></p>";
 
-        $html = "<table border='1' cellpadding='6' cellspacing='0'>";
+    $idAttr = $id !== '' ? " id='" . htmlspecialchars($id, ENT_QUOTES) . "'" : '';
+
+    if ($class !== '') {
+        $tableTag = "<table{$idAttr} class='" . htmlspecialchars($class, ENT_QUOTES) . "'>";
+    } else {
+        $tableTag = "<table{$idAttr} border='1' cellpadding='6' cellspacing='0'>";
+    }
+
+    $html = $tableTag;
+
+    // thead
+    $html .= "<thead><tr>";
+    foreach (array_keys($array[0]) as $col) {
+        $html .= "<th>" . htmlspecialchars($col, ENT_QUOTES) . "</th>";
+    }
+    $html .= "</tr></thead>";
+
+    // tbody
+    $html .= "<tbody>";
+    foreach ($array as $row) {
         $html .= "<tr>";
-        foreach (array_keys($array[0]) as $col) {
-            $html .= "<th>" . htmlspecialchars($col) . "</th>";
+        foreach ($row as $cell) {
+            $html .= "<td>" . htmlspecialchars($cell, ENT_QUOTES) . "</td>";
         }
         $html .= "</tr>";
-
-        foreach ($array as $row) {
-            $html .= "<tr>";
-            foreach ($row as $cell) {
-                $html .= "<td>" . htmlspecialchars($cell) . "</td>";
-            }
-            $html .= "</tr>";
-        }
-
-        return $html . "</table>";
     }
+    $html .= "</tbody>";
+
+    $html .= "</table>";
+
+    return $html;
+}
 
     // --- MISC OUTPUT ---
 
