@@ -412,9 +412,4 @@ if (!function_exists('jsonString')) {
         return Microfy::jsonString(...$args);
     }
 }
-if (!function_exists('jsonString')) {
-    function jsonString(...$args) {
-        return Microfy::jsonString(...$args);
-    }
-}
 
