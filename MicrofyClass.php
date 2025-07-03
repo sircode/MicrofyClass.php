@@ -326,42 +326,44 @@ class Microfy
         return "<a href=\"$href\"$targetAttr$classAttr>$text</a>";
     }
 
-     public static function htmlTable(array $array, string $class = '', string $id = ''): string
-{
-    if (empty($array)) return "<p><em>No data.</em></p>";
-
-    $idAttr = $id !== '' ? " id='" . htmlspecialchars($id, ENT_QUOTES) . "'" : '';
-
-    if ($class !== '') {
-        $tableTag = "<table{$idAttr} class='" . htmlspecialchars($class, ENT_QUOTES) . "'>";
-    } else {
-        $tableTag = "<table{$idAttr} border='1' cellpadding='6' cellspacing='0'>";
-    }
-
-    $html = $tableTag;
-
-    // thead
-    $html .= "<thead><tr>";
-    foreach (array_keys($array[0]) as $col) {
-        $html .= "<th>" . htmlspecialchars($col, ENT_QUOTES) . "</th>";
-    }
-    $html .= "</tr></thead>";
-
-    // tbody
-    $html .= "<tbody>";
-    foreach ($array as $row) {
-        $html .= "<tr>";
-        foreach ($row as $cell) {
-            $html .= "<td>" . htmlspecialchars($cell, ENT_QUOTES) . "</td>";
+    public static function htmlTable(array $array, string $class = '', string $id = ''): string
+    {
+        if (empty($array)) {
+            return "<p><em>No data.</em></p>";
         }
-        $html .= "</tr>";
+
+        $idAttr = $id !== '' ? " id='" . htmlspecialchars((string) $id, ENT_QUOTES) . "'" : '';
+
+        if ($class !== '') {
+            $tableTag = "<table{$idAttr} class='" . htmlspecialchars((string) $class, ENT_QUOTES) . "'>";
+        } else {
+            $tableTag = "<table{$idAttr} border='1' cellpadding='6' cellspacing='0'>";
+        }
+
+        $html = $tableTag;
+
+        // thead
+        $html .= "<thead><tr>";
+        foreach (array_keys($array[0]) as $col) {
+            $html .= "<th>" . htmlspecialchars((string) $col, ENT_QUOTES) . "</th>";
+        }
+        $html .= "</tr></thead>";
+
+        // tbody
+        $html .= "<tbody>";
+        foreach ($array as $row) {
+            $html .= "<tr>";
+            foreach ($row as $cell) {
+                $html .= "<td>" . htmlspecialchars((string) $cell, ENT_QUOTES) . "</td>";
+            }
+            $html .= "</tr>";
+        }
+        $html .= "</tbody>";
+
+        $html .= "</table>";
+
+        return $html;
     }
-    $html .= "</tbody>";
-
-    $html .= "</table>";
-
-    return $html;
-}
 
     // --- MISC OUTPUT ---
 
@@ -424,14 +426,17 @@ class Microfy
     }
 
     public static function jsonArray(array $data): string
-{
-    return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-}
+    {
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
 
-public static function jsonString(string $msg, bool $ok = true): string
-{
-    return self::jsonArray(['status' => $ok ? 'ok' : 'fail', 'msg' => $msg]);
-}
+    public static function jsonString(string $msg, bool $ok = true): string
+    {
+        return self::jsonArray([
+            'status' => $ok ? 'ok' : 'fail',
+            'msg'    => $msg,
+        ]);
+    }
 
 
     // --- STRING ---
@@ -508,22 +513,25 @@ public static function jsonString(string $msg, bool $ok = true): string
         echo "<span" . self::classAttr($class) . ">$text</span>";
     }
 
-  public static function div(string $text, array $attrs = []): string {
-    $attrStr = self::buildAttr($attrs);
-    return "<div$attrStr>$text</div>";
-}
+    public static function div(string $text, array $attrs = []): string
+    {
+        $attrStr = self::buildAttr($attrs);
+        return "<div$attrStr>$text</div>";
+    }
     public static function section(string $text = '', string $class = ''): void
     {
         echo "<section" . self::classAttr($class) . ">$text</section>";
     }
 
-    public static function buildAttr(array $attrs): string {
-    $parts = [];
-    foreach ($attrs as $k => $v) {
-        $parts[] = "$k=\"" . htmlspecialchars($v) . "\"";
+    public static function buildAttr(array $attrs): string
+    {
+        $parts = [];
+        foreach ($attrs as $k => $v) {
+            $parts[] = "$k=\"" . htmlspecialchars((string) $v) . "\"";
+        }
+
+        return $parts ? ' ' . implode(' ', $parts) : '';
     }
-    return $parts ? ' ' . implode(' ', $parts) : '';
-}
 
     // --- CODE BLOCKS ---
 
