@@ -136,6 +136,14 @@ Microfy::c('Step A');
 ```
 
 More [Examples](https://itnb.com/MicrofyClass/)
+## ✅ Lint Check
+
+Run PHP's built-in linter across all project files:
+
+```bash
+./scripts/lint.sh
+```
+
 
 ---
 
