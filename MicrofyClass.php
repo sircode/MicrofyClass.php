@@ -115,7 +115,7 @@ class Microfy
     {
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
 
     public static function dbOne(PDO $pdo, string $sql, array $params = []): mixed
