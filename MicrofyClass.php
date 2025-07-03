@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * MicrofyClass.php
  * v0.1.1 
