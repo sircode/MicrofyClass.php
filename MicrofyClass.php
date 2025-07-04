@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * MicrofyClass.php
  * v0.1.1 
@@ -107,6 +109,7 @@ class Microfy
             return new PDO($dsn, $user, $pass, $options);
         } catch (PDOException $e) {
             self::dd("PDO Connection failed: " . $e->getMessage());
+            return null; 
         }
     }
 
@@ -115,7 +118,7 @@ class Microfy
     {
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // <-- fix here
     }
 
     public static function dbOne(PDO $pdo, string $sql, array $params = []): mixed
@@ -150,11 +153,19 @@ class Microfy
 
     public static function dbExists(PDO $pdo, string $table, string $column, $value): bool
     {
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $table)) {
+            return false; // invalid table name
+        }
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $column)) {
+            return false; // invalid column name
+        }
+
         $sql = "SELECT 1 FROM `$table` WHERE `$column` = ? LIMIT 1";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$value]);
         return $stmt->fetchColumn() !== false;
     }
+
 
     public static function dbError(PDOException $e): void
     {
@@ -331,39 +342,53 @@ class Microfy
         if (empty($array)) {
             return "<p><em>No data.</em></p>";
         }
-
-        $idAttr = $id !== '' ? " id='" . htmlspecialchars($id, ENT_QUOTES) . "'" : '';
-
-        if ($class !== '') {
-            $tableTag = "<table{$idAttr} class='" . htmlspecialchars($class, ENT_QUOTES) . "'>";
-        } else {
-            $tableTag = "<table{$idAttr} border='1' cellpadding='6' cellspacing='0'>";
+        if (!isset($array[0]) || !is_array($array[0]) || empty($array[0])) {
+            return "<p><em>No columns to display.</em></p>";
         }
 
-        $html = $tableTag;
+        $idAttr = $id !== ''
+            ? " id='" . htmlspecialchars((string)$id, ENT_QUOTES, 'UTF-8', false) . "'"
+            : '';
+        $classAttr = $class !== ''
+            ? " class='" . htmlspecialchars((string)$class, ENT_QUOTES, 'UTF-8', false) . "'"
+            : " border='1' cellpadding='6' cellspacing='0'";
+
+        $html = "<table{$idAttr}{$classAttr}>";
 
         // thead
         $html .= "<thead><tr>";
         foreach (array_keys($array[0]) as $col) {
-            $html .= "<th>" . htmlspecialchars($col, ENT_QUOTES) . "</th>";
+            $colStr = (string)$col;
+            $html .= '<th>'
+                . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
+                . '</th>';
         }
         $html .= "</tr></thead>";
 
         // tbody
         $html .= "<tbody>";
         foreach ($array as $row) {
+            if (!is_array($row)) {
+                continue; // skip invalid rows
+            }
             $html .= "<tr>";
             foreach ($row as $cell) {
-                $html .= "<td>" . htmlspecialchars($cell, ENT_QUOTES) . "</td>";
+                if (is_array($cell) || is_object($cell)) {
+                    $cellStr = '';
+                } else {
+                    $cellStr = (string)$cell;
+                }
+                $html .= '<td>'
+                    . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
+                    . '</td>';
             }
             $html .= "</tr>";
         }
-        $html .= "</tbody>";
-
-        $html .= "</table>";
+        $html .= "</tbody></table>";
 
         return $html;
     }
+
 
     // --- MISC OUTPUT ---
 
