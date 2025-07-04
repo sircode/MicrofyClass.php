@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 // microfy_aliases.php - v0.1.1
 
