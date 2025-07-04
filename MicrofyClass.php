@@ -107,6 +107,7 @@ class Microfy
             return new PDO($dsn, $user, $pass, $options);
         } catch (PDOException $e) {
             self::dd("PDO Connection failed: " . $e->getMessage());
+            return null; 
         }
     }
 
