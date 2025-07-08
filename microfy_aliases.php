@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-// microfy_aliases.php - v0.1.1
+// microfy_aliases.php - v0.1.2
 
 if (!function_exists('val')) {
     function val(...$args) {
@@ -221,6 +221,11 @@ if (!function_exists('a')) {
 if (!function_exists('htmlTable')) {
     function htmlTable(...$args) {
         return Microfy::htmlTable(...$args);
+    }
+}
+if (!function_exists('htmlTableSafe')) {
+    function htmlTable(...$args) {
+        return Microfy::htmlTableSafe(...$args);
     }
 }
 if (!function_exists('cList')) {
