@@ -3,7 +3,7 @@
 declare(strict_types=1);
 /**
  * MicrofyClass.php
- * v0.1.1 
+ * v0.1.2 
  * Author: SirCode
  */
 class Microfy
@@ -109,7 +109,7 @@ class Microfy
             return new PDO($dsn, $user, $pass, $options);
         } catch (PDOException $e) {
             self::dd("PDO Connection failed: " . $e->getMessage());
-            return null; 
+            return null;
         }
     }
 
@@ -337,8 +337,12 @@ class Microfy
         return "<a href=\"$href\"$targetAttr$classAttr>$text</a>";
     }
 
-    public static function htmlTable(array $array, string $class = '', string $id = ''): string
+    public static function htmlTableSafe(array $rows, string $cssClass = '', string $id = ''): string
     {
+
+        $array = $rows;
+        $class = $cssClass;
+
         if (empty($array)) {
             return "<p><em>No data.</em></p>";
         }
@@ -388,6 +392,86 @@ class Microfy
 
         return $html;
     }
+
+    /**
+     * Builds an HTML table, escaping every cell by default—
+     * but allowing raw HTML in any column you whitelist.
+     *
+     * @param array       $rows         Row-data, as an array of associative arrays
+     * @param string[]    $allowRawCols  Column-names whose values are already-safe HTML
+     * @param string      $cssClass         Optional CSS class
+     * @param string      $id            Optional element ID
+     * @return string                    HTML string of the table (or a “no data” message)
+     */
+    public static function htmlTable(
+        array  $rows,
+        array  $allowRawCols = [],
+        string $cssClass       = '',
+        string $id          = ''
+    ): string {
+
+
+        $array = $rows;
+        $class = $cssClass;
+
+        if (empty($array)) {
+            return "<p><em>No data.</em></p>";
+        }
+        if (!isset($array[0]) || !is_array($array[0]) || empty($array[0])) {
+            return "<p><em>No columns to display.</em></p>";
+        }
+
+        // build id and class (or default border attrs) safely
+        $idAttr = $id !== ''
+            ? " id='" . htmlspecialchars($id, ENT_QUOTES, 'UTF-8', false) . "'"
+            : '';
+        $classAttr = $class !== ''
+            ? " class='" . htmlspecialchars($class, ENT_QUOTES, 'UTF-8', false) . "'"
+            : " border='1' cellpadding='6' cellspacing='0'";
+
+        $html = "<table{$idAttr}{$classAttr}>";
+
+        // thead
+        $html .= "<thead><tr>";
+        foreach (array_keys($array[0]) as $col) {
+            $colStr = (string)$col;
+            $html .= '<th>'
+                . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
+                . '</th>';
+        }
+        $html .= "</tr></thead>";
+
+        // tbody
+        $html .= "<tbody>";
+        foreach ($array as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $html .= "<tr>";
+            foreach ($row as $col => $cell) {
+                // normalize to string
+                if (is_array($cell) || is_object($cell)) {
+                    $cellStr = '';
+                } else {
+                    $cellStr = (string)$cell;
+                }
+
+                // if this column is whitelisted, output raw; else escape
+                if (in_array($col, $allowRawCols, true)) {
+                    $html .= "<td>{$cellStr}</td>";
+                } else {
+                    $html .= '<td>'
+                        . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
+                        . '</td>';
+                }
+            }
+            $html .= "</tr>";
+        }
+        $html .= "</tbody></table>";
+
+        return $html;
+    }
+
 
 
     // --- MISC OUTPUT ---
