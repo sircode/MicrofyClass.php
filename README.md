@@ -21,14 +21,14 @@ Forget frameworks when all you need is power and speed — **Microfy** is your c
 * You're tired of repetitive boilerplate like `isset($_GET['x']) ? $_GET['x'] : ''`
 * You want clean, expressive, and testable PHP code
 * You work in an OOP environment but don’t want bulky libraries
-* You need practical helpers like `Microfy::get()`, `Microfy::pp()`, `Microfy::dbAll()` right away
+* You need practical helpers like `Microfy::getVar()`, `Microfy::pp()`, `Microfy::dbAll()` right away
 * You value full control with zero magic
 
 ---
 
 ## ✨ Features
 
-* **Request Access**: `get()`, `post()`, `request()` and prefixed variants
+* **Request Access**: `getVar()`, `postVar()`, `requestVar()` and prefixed variants
 * **Debug Tools**: `pp()`, `pd()`, `mpp()`, `mlog()`, with optional returns (`pdd()`, `pdr()`)
 * **Database**: PDO helpers like `dbPdo()`, `dbAll()`, `dbExists()`, etc.
 * **HTML Snippets**: `h()`, `br()`, `codePhp()`, `mark()`, `a()`, `b()`, `ul()`, `li()` and more
@@ -77,7 +77,7 @@ require_once 'MicrofyClass.php';
 
 ```php
 Microfy::pp($_GET);
-$name  = Microfy::get('name', 'Guest');
+$name  = Microfy::getVar('name', 'Guest');
 $email = Microfy::getArray(['email' => 'test@test.com'], 'email', 'none');
 ```
 
@@ -155,7 +155,7 @@ Use at your own risk — no warranties, no guarantees, just useful code.
 
 ### 📦 Also Available as Procedural Version
 
-Prefer short global functions like `pp()`, `get()`, or `dbAll()`?
+Prefer short global functions like `pp()`, `getVar()`, or `dbAll()`?
 👉 [`microfy.php`](https://github.com/sircode/microfy.php) offers the same features — no classes required.
 
 
