@@ -3,11 +3,12 @@
 declare(strict_types=1);
 /**
  * MicrofyClass.php
- * v0.1.2 
+ * v0.1.3 
  * Author: SirCode
  */
 class Microfy
 {
+    
 
     // Safe array accessor
     public static function val(array $array, $key, $default = null)
@@ -16,15 +17,15 @@ class Microfy
     }
 
     // GET/POST/REQUEST
-    public static function get($key, $default = '')
+    public static function getVar($key, $default = '')
     {
         return self::val($_GET, $key, $default);
     }
-    public static function post($key, $default = '')
+    public static function postVar($key, $default = '')
     {
         return self::val($_POST, $key, $default);
     }
-    public static function request($key, $default = '')
+    public static function requestVar($key, $default = '')
     {
         return $_POST[$key] ?? $_GET[$key] ?? $default;
     }
