@@ -1,26 +1,26 @@
 <?php
 declare(strict_types=1);
 
-// microfy_aliases.php - v0.1.2
+// microfy_aliases.php - v0.1.3
 
 if (!function_exists('val')) {
     function val(...$args) {
         return Microfy::val(...$args);
     }
 }
-if (!function_exists('get')) {
-    function get(...$args) {
-        return Microfy::get(...$args);
+if (!function_exists('getVar')) {
+    function getVar(...$args) {
+        return Microfy::getVar(...$args);
     }
 }
-if (!function_exists('post')) {
-    function post(...$args) {
-        return Microfy::post(...$args);
+if (!function_exists('postVar')) {
+    function postVar(...$args) {
+        return Microfy::postVar(...$args);
     }
 }
-if (!function_exists('request')) {
-    function request(...$args) {
-        return Microfy::request(...$args);
+if (!function_exists('requestVar')) {
+    function requestVar(...$args) {
+        return Microfy::requestVar(...$args);
     }
 }
 if (!function_exists('extractKeys')) {
@@ -224,7 +224,7 @@ if (!function_exists('htmlTable')) {
     }
 }
 if (!function_exists('htmlTableSafe')) {
-    function htmlTable(...$args) {
+    function htmlTableSafe(...$args) {
         return Microfy::htmlTableSafe(...$args);
     }
 }
