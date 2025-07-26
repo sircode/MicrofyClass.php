@@ -1,7 +1,11 @@
 <?php
-declare(strict_types=1);
 
-// microfy_aliases.php - v0.1.3
+/**
+ * microfyPHP
+ * microfy_aliases.php
+ * v0.1.4 
+ * Author: SirCode
+ */
 
 if (!function_exists('val')) {
     function val(...$args) {
@@ -203,11 +207,6 @@ if (!function_exists('env')) {
         return Microfy::env(...$args);
     }
 }
-if (!function_exists('now')) {
-    function now(...$args) {
-        return Microfy::now(...$args);
-    }
-}
 if (!function_exists('jsonf')) {
     function jsonf(...$args) {
         return Microfy::jsonf(...$args);
@@ -218,19 +217,24 @@ if (!function_exists('a')) {
         return Microfy::a(...$args);
     }
 }
-if (!function_exists('htmlTable')) {
-    function htmlTable(...$args) {
-        return Microfy::htmlTable(...$args);
-    }
-}
 if (!function_exists('htmlTableSafe')) {
     function htmlTableSafe(...$args) {
         return Microfy::htmlTableSafe(...$args);
     }
 }
+if (!function_exists('htmlTable')) {
+    function htmlTable(...$args) {
+        return Microfy::htmlTable(...$args);
+    }
+}
 if (!function_exists('cList')) {
     function cList(...$args) {
         return Microfy::cList(...$args);
+    }
+}
+if (!function_exists('now')) {
+    function now(...$args) {
+        return Microfy::now(...$args);
     }
 }
 if (!function_exists('load')) {
@@ -261,6 +265,16 @@ if (!function_exists('ok')) {
 if (!function_exists('fail')) {
     function fail(...$args) {
         return Microfy::fail(...$args);
+    }
+}
+if (!function_exists('jsonArray')) {
+    function jsonArray(...$args) {
+        return Microfy::jsonArray(...$args);
+    }
+}
+if (!function_exists('jsonString')) {
+    function jsonString(...$args) {
+        return Microfy::jsonString(...$args);
     }
 }
 if (!function_exists('slugify')) {
@@ -316,6 +330,11 @@ if (!function_exists('div')) {
 if (!function_exists('section')) {
     function section(...$args) {
         return Microfy::section(...$args);
+    }
+}
+if (!function_exists('buildAttr')) {
+    function buildAttr(...$args) {
+        return Microfy::buildAttr(...$args);
     }
 }
 if (!function_exists('code')) {
@@ -408,14 +427,243 @@ if (!function_exists('cStr')) {
         return Microfy::cStr(...$args);
     }
 }
-if (!function_exists('jsonArray')) {
-    function jsonArray(...$args) {
-        return Microfy::jsonArray(...$args);
+if (!function_exists('classAttr')) {
+    function classAttr(...$args) {
+        return Microfy::classAttr(...$args);
     }
 }
-if (!function_exists('jsonString')) {
-    function jsonString(...$args) {
-        return Microfy::jsonString(...$args);
+if (!function_exists('tag')) {
+    function tag(...$args) {
+        return Microfy::tag(...$args);
     }
 }
-
+if (!function_exists('html_tag')) {
+    function html_tag(...$args) {
+        return Microfy::html_tag(...$args);
+    }
+}
+if (!function_exists('html_html')) {
+    function html_html(...$args) {
+        return Microfy::html_html(...$args);
+    }
+}
+if (!function_exists('html_head')) {
+    function html_head(...$args) {
+        return Microfy::html_head(...$args);
+    }
+}
+if (!function_exists('html_body')) {
+    function html_body(...$args) {
+        return Microfy::html_body(...$args);
+    }
+}
+if (!function_exists('html_header')) {
+    function html_header(...$args) {
+        return Microfy::html_header(...$args);
+    }
+}
+if (!function_exists('html_footer')) {
+    function html_footer(...$args) {
+        return Microfy::html_footer(...$args);
+    }
+}
+if (!function_exists('html_section')) {
+    function html_section(...$args) {
+        return Microfy::html_section(...$args);
+    }
+}
+if (!function_exists('html_article')) {
+    function html_article(...$args) {
+        return Microfy::html_article(...$args);
+    }
+}
+if (!function_exists('html_nav')) {
+    function html_nav(...$args) {
+        return Microfy::html_nav(...$args);
+    }
+}
+if (!function_exists('html_aside')) {
+    function html_aside(...$args) {
+        return Microfy::html_aside(...$args);
+    }
+}
+if (!function_exists('html_div')) {
+    function html_div(...$args) {
+        return Microfy::html_div(...$args);
+    }
+}
+if (!function_exists('html_span')) {
+    function html_span(...$args) {
+        return Microfy::html_span(...$args);
+    }
+}
+if (!function_exists('html_h1')) {
+    function html_h1(...$args) {
+        return Microfy::html_h1(...$args);
+    }
+}
+if (!function_exists('html_h2')) {
+    function html_h2(...$args) {
+        return Microfy::html_h2(...$args);
+    }
+}
+if (!function_exists('html_h3')) {
+    function html_h3(...$args) {
+        return Microfy::html_h3(...$args);
+    }
+}
+if (!function_exists('html_h4')) {
+    function html_h4(...$args) {
+        return Microfy::html_h4(...$args);
+    }
+}
+if (!function_exists('html_h5')) {
+    function html_h5(...$args) {
+        return Microfy::html_h5(...$args);
+    }
+}
+if (!function_exists('html_h6')) {
+    function html_h6(...$args) {
+        return Microfy::html_h6(...$args);
+    }
+}
+if (!function_exists('html_p')) {
+    function html_p(...$args) {
+        return Microfy::html_p(...$args);
+    }
+}
+if (!function_exists('html_blockquote')) {
+    function html_blockquote(...$args) {
+        return Microfy::html_blockquote(...$args);
+    }
+}
+if (!function_exists('html_pre')) {
+    function html_pre(...$args) {
+        return Microfy::html_pre(...$args);
+    }
+}
+if (!function_exists('html_code')) {
+    function html_code(...$args) {
+        return Microfy::html_code(...$args);
+    }
+}
+if (!function_exists('html_ul')) {
+    function html_ul(...$args) {
+        return Microfy::html_ul(...$args);
+    }
+}
+if (!function_exists('html_ol')) {
+    function html_ol(...$args) {
+        return Microfy::html_ol(...$args);
+    }
+}
+if (!function_exists('html_li')) {
+    function html_li(...$args) {
+        return Microfy::html_li(...$args);
+    }
+}
+if (!function_exists('html_dl')) {
+    function html_dl(...$args) {
+        return Microfy::html_dl(...$args);
+    }
+}
+if (!function_exists('html_table')) {
+    function html_table(...$args) {
+        return Microfy::html_table(...$args);
+    }
+}
+if (!function_exists('html_thead')) {
+    function html_thead(...$args) {
+        return Microfy::html_thead(...$args);
+    }
+}
+if (!function_exists('html_tbody')) {
+    function html_tbody(...$args) {
+        return Microfy::html_tbody(...$args);
+    }
+}
+if (!function_exists('html_tr')) {
+    function html_tr(...$args) {
+        return Microfy::html_tr(...$args);
+    }
+}
+if (!function_exists('html_th')) {
+    function html_th(...$args) {
+        return Microfy::html_th(...$args);
+    }
+}
+if (!function_exists('html_td')) {
+    function html_td(...$args) {
+        return Microfy::html_td(...$args);
+    }
+}
+if (!function_exists('html_form')) {
+    function html_form(...$args) {
+        return Microfy::html_form(...$args);
+    }
+}
+if (!function_exists('html_label')) {
+    function html_label(...$args) {
+        return Microfy::html_label(...$args);
+    }
+}
+if (!function_exists('html_input')) {
+    function html_input(...$args) {
+        return Microfy::html_input(...$args);
+    }
+}
+if (!function_exists('html_textarea')) {
+    function html_textarea(...$args) {
+        return Microfy::html_textarea(...$args);
+    }
+}
+if (!function_exists('html_select')) {
+    function html_select(...$args) {
+        return Microfy::html_select(...$args);
+    }
+}
+if (!function_exists('html_button')) {
+    function html_button(...$args) {
+        return Microfy::html_button(...$args);
+    }
+}
+if (!function_exists('html_br')) {
+    function html_br(...$args) {
+        return Microfy::html_br(...$args);
+    }
+}
+if (!function_exists('html_hr')) {
+    function html_hr(...$args) {
+        return Microfy::html_hr(...$args);
+    }
+}
+if (!function_exists('html_img')) {
+    function html_img(...$args) {
+        return Microfy::html_img(...$args);
+    }
+}
+if (!function_exists('html_meta')) {
+    function html_meta(...$args) {
+        return Microfy::html_meta(...$args);
+    }
+}
+if (!function_exists('html_link')) {
+    function html_link(...$args) {
+        return Microfy::html_link(...$args);
+    }
+}
+if (!function_exists('html_script')) {
+    function html_script(...$args) {
+        return Microfy::html_script(...$args);
+    }
+}
+if (!function_exists('html_style')) {
+    function html_style(...$args) {
+        return Microfy::html_style(...$args);
+    }
+}
+if (!function_exists('pretty_html')) {
+    function pretty_html(...$args) {
+        return Microfy::pretty_html(...$args);
+    }
+}
