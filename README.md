@@ -58,7 +58,7 @@ Just include microfy_aliases.php to use short, procedural-style aliases for all 
 
 ```php
 require_once 'MicrofyClass.php';
-require_once 'microfy_aliases.php';
+require_once 'microfy_aliases.php'; // optional
 
 pp(['quick', 'debug']); // works alongside Microfy::pp(...)
 ```
