@@ -2,13 +2,20 @@
 
 declare(strict_types=1);
 /**
+ * microfyPHP
  * MicrofyClass.php
- * v0.1.3 
+ * v0.1.4 
  * Author: SirCode
  */
 class Microfy
 {
-    
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   Arrays
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
+
 
     // Safe array accessor
     public static function val(array $array, $key, $default = null)
@@ -89,7 +96,11 @@ class Microfy
         }
     }
 
-
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   Database 
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     // --- PDO connection ---
     public static function dbPdo($host, $dbname, $user, $pass, $charset = 'utf8mb4', $driver = 'mysql'): ?PDO
@@ -193,7 +204,11 @@ class Microfy
     Microfy::pp($rows);
     */
 
-    // --- debug ---
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   Debug
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     // --- Pretty Print (print_r) ---
     public static function pp($data, $limit = null): void
@@ -300,19 +315,22 @@ class Microfy
         echo "</div>";
     }
 
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   ENV
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
 
-    // --- ENV / TIME ---
 
     public static function env(string $key, $default = null)
     {
         return $_ENV[$key] ?? getenv($key) ?: $default;
     }
 
-    public static function now(string $format = 'Y-m-d H:i:s'): string
-    {
-        return date($format);
-    }
+
+
+
 
     // --- FILES ---
 
@@ -323,7 +341,13 @@ class Microfy
         return json_decode($content, $assoc);
     }
 
-    // --- HTML HELPERS ---
+
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   HTML HELPERS
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     public static function a(string $href, ?string $text = null, string $target = '', string $class = ''): string
     {
@@ -475,7 +499,12 @@ class Microfy
 
 
 
-    // --- MISC OUTPUT ---
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   MISC OUTPUT
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     public static function cList(array $items, bool $reset = false): void
     {
@@ -485,6 +514,11 @@ class Microfy
         foreach ($items as $item) {
             echo $counter++ . '. ' . $item . '<br>';
         }
+    }
+
+    public static function now(string $format = 'Y-m-d H:i:s'): string
+    {
+        return date($format);
     }
 
     /* 
@@ -511,7 +545,13 @@ class Microfy
         }
     }
 
-    // --- RESPONSE / OUTPUT ---
+
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   RESPONSE / OUTPUT
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     public static function hsc(string $str): void
     {
@@ -558,7 +598,13 @@ class Microfy
         return trim($string, '-');
     }
 
-    // --- STYLE / HTML OUTPUT ---
+
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   STYLE / HTML OUTPUT
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     public static function h(int $level, string $text, string $class = ''): void
     {
@@ -611,7 +657,15 @@ class Microfy
     */
 
 
-    // --- BLOCK ELEMENTS ---
+
+
+
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   BLOCK ELEMENTS
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     public static function p(string $text = '', string $class = ''): void
     {
@@ -643,7 +697,12 @@ class Microfy
         return $parts ? ' ' . implode(' ', $parts) : '';
     }
 
-    // --- CODE BLOCKS ---
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *   CODE BLOCKS
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     public static function code(string $content, string $lang = ''): void
     {
@@ -680,7 +739,13 @@ class Microfy
         self::code($text, 'c');
     }
 
-    // --- LISTS ---
+
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *  LISTS
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     public static function ul(array $items, string $class = ''): void
     {
@@ -704,7 +769,12 @@ class Microfy
         echo "<li>$text</li>";
     }
 
-    // --- LINE BREAKS & HR ---
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *  LINE BREAKS & HR
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
 
     public static function br(...$args): void
     {
@@ -758,4 +828,326 @@ class Microfy
     Microfy::ul(['Item 1', 'Item 2']);
     Microfy::br();
     Microfy::c('Step A'); */
+
+
+    /**
+     * ──────────────────────────────────────────────────────────────────────────────
+     *  HTML HELPERS 2
+     * ──────────────────────────────────────────────────────────────────────────────
+     */
+
+
+    // Core tag builder
+    public static function tag(string $tag, $content = '', array $attrs = [], bool $selfClose = false): string
+    {
+        $attrStrings = [];
+        foreach ($attrs as $k => $v) {
+            $attrStrings[] = sprintf('%s="%s"', $k, htmlspecialchars((string)$v, ENT_QUOTES));
+        }
+        $attrString = $attrStrings ? ' ' . implode(' ', $attrStrings) : '';
+
+        if ($selfClose) {
+            return "<{$tag}{$attrString} />";
+        }
+
+        if (is_array($content)) {
+            $content = implode('', $content);
+        }
+
+        return "<{$tag}{$attrString}>{$content}</{$tag}>";
+    }
+
+    // Alias for tag()
+    public static function html_tag(string $tag, $content = '', array $attrs = [], bool $selfClose = false): string
+    {
+        return self::tag($tag, $content, $attrs, $selfClose);
+    }
+
+    // Specific paired element for <html>
+    public static function html_html($content = '', array $attrs = []): string
+    {
+        return self::html_tag('html', $content, $attrs);
+    }
+
+
+    public static function html_head($content = '', array $attrs = []): string
+    {
+        return self::html_tag('head', $content, $attrs);
+    }
+
+    public static function html_body($content = '', array $attrs = []): string
+    {
+        return self::html_tag('body', $content, $attrs);
+    }
+
+    public static function html_header($content = '', array $attrs = []): string
+    {
+        return self::html_tag('header', $content, $attrs);
+    }
+
+    public static function html_footer($content = '', array $attrs = []): string
+    {
+        return self::html_tag('footer', $content, $attrs);
+    }
+
+    public static function html_section($content = '', array $attrs = []): string
+    {
+        return self::html_tag('section', $content, $attrs);
+    }
+
+    public static function html_article($content = '', array $attrs = []): string
+    {
+        return self::html_tag('article', $content, $attrs);
+    }
+
+    public static function html_nav($content = '', array $attrs = []): string
+    {
+        return self::html_tag('nav', $content, $attrs);
+    }
+
+    public static function html_aside($content = '', array $attrs = []): string
+    {
+        return self::html_tag('aside', $content, $attrs);
+    }
+
+    public static function html_div($content = '', array $attrs = []): string
+    {
+        return self::html_tag('div', $content, $attrs);
+    }
+
+    public static function html_span($content = '', array $attrs = []): string
+    {
+        return self::html_tag('span', $content, $attrs);
+    }
+
+    public static function html_h1($content = '', array $attrs = []): string
+    {
+        return self::html_tag('h1', $content, $attrs);
+    }
+
+    public static function html_h2($content = '', array $attrs = []): string
+    {
+        return self::html_tag('h2', $content, $attrs);
+    }
+
+    public static function html_h3($content = '', array $attrs = []): string
+    {
+        return self::html_tag('h3', $content, $attrs);
+    }
+
+    public static function html_h4($content = '', array $attrs = []): string
+    {
+        return self::html_tag('h4', $content, $attrs);
+    }
+
+    public static function html_h5($content = '', array $attrs = []): string
+    {
+        return self::html_tag('h5', $content, $attrs);
+    }
+
+    public static function html_h6($content = '', array $attrs = []): string
+    {
+        return self::html_tag('h6', $content, $attrs);
+    }
+
+
+
+    public static function html_p($content = '', array $attrs = []): string
+    {
+        return self::html_tag('p', htmlspecialchars((string)$content), $attrs);
+    }
+
+    public static function html_blockquote($content = '', array $attrs = []): string
+    {
+        return self::html_tag('blockquote', $content, $attrs);
+    }
+
+    public static function html_pre($content = '', array $attrs = []): string
+    {
+        return self::html_tag('pre', htmlspecialchars((string)$content), $attrs);
+    }
+
+    public static function html_code($content = '', array $attrs = []): string
+    {
+        return self::html_tag('code', htmlspecialchars((string)$content), $attrs);
+    }
+
+    public static function html_ul(array $items, array $attrs = []): string
+    {
+        $lis = array_map(fn($i) => self::tag('li', $i), $items);
+        return self::html_tag('ul', $lis, $attrs);
+    }
+
+    public static function html_ol(array $items, array $attrs = []): string
+    {
+        $lis = array_map(fn($i) => self::tag('li', $i), $items);
+        return self::html_tag('ol', $lis, $attrs);
+    }
+
+    public static function html_li($content = '', array $attrs = []): string
+    {
+        return self::html_tag('li', $content, $attrs);
+    }
+
+    public static function html_dl(array $terms, array $attrs = []): string
+    {
+        $children = [];
+        foreach ($terms as $t) {
+            $children[] = self::tag('dt', htmlspecialchars((string)$t['term']));
+            $children[] = self::tag('dd', htmlspecialchars((string)$t['desc']));
+        }
+        return self::html_tag('dl', $children, $attrs);
+    }
+
+
+    /*  Sample usage
+
+    echo Microfy::html_ul(['One', 'Two', 'Three'], ['class' => 'my-list']);
+    echo Microfy::html_p('This is a paragraph.');
+    echo Microfy::html_code('echo "Hello World";'); */
+
+    /* Tables */
+
+    public static function html_table($content = '', array $attrs = []): string
+    {
+        return self::html_tag('table', $content, $attrs);
+    }
+
+    public static function html_thead($content = '', array $attrs = []): string
+    {
+        return self::html_tag('thead', $content, $attrs);
+    }
+
+    public static function html_tbody($content = '', array $attrs = []): string
+    {
+        return self::html_tag('tbody', $content, $attrs);
+    }
+
+    public static function html_tr($content = '', array $attrs = []): string
+    {
+        return self::html_tag('tr', $content, $attrs);
+    }
+
+    public static function html_th($content = '', array $attrs = []): string
+    {
+        return self::html_tag('th', $content, $attrs);
+    }
+
+    public static function html_td($content = '', array $attrs = []): string
+    {
+        return self::html_tag('td', $content, $attrs);
+    }
+
+    /* Form element methods */
+
+    public static function html_form($content = '', array $attrs = []): string
+    {
+        return self::html_tag('form', $content, $attrs);
+    }
+
+    public static function html_label($content = '', array $attrs = []): string
+    {
+        return self::html_tag('label', htmlspecialchars((string)$content), $attrs);
+    }
+
+    public static function html_input(array $attrs = []): string
+    {
+        return self::html_tag('input', '', $attrs, true);
+    }
+
+    public static function html_textarea($content = '', array $attrs = []): string
+    {
+        return self::html_tag('textarea', htmlspecialchars((string)$content), $attrs);
+    }
+
+    public static function html_select(array $options, array $attrs = []): string
+    {
+        $opts = [];
+        foreach ($options as $value => $text) {
+            $opts[] = self::tag('option', htmlspecialchars((string)$text), ['value' => (string)$value]);
+        }
+        return self::html_tag('select', $opts, $attrs);
+    }
+
+    public static function html_button($content = '', array $attrs = []): string
+    {
+        return self::html_tag('button', $content, $attrs);
+    }
+    /* echo Microfy::html_form(
+            Microfy::html_label('Email:', ['for' => 'email']) .
+            Microfy::html_input(['type' => 'email', 'id' => 'email', 'name' => 'email']) .
+            Microfy::html_button('Send', ['type' => 'submit']),
+            ['method' => 'post']
+        ); */
+
+
+    /* Self-closing and embedded content methods */
+
+    public static function html_br(array $attrs = []): string
+    {
+        return self::html_tag('br', '', $attrs, true);
+    }
+
+    public static function html_hr(array $attrs = []): string
+    {
+        return self::html_tag('hr', '', $attrs, true);
+    }
+
+    public static function html_img(array $attrs = []): string
+    {
+        return self::html_tag('img', '', $attrs, true);
+    }
+
+    public static function html_meta(array $attrs = []): string
+    {
+        return self::html_tag('meta', '', $attrs, true);
+    }
+
+    public static function html_link(array $attrs = []): string
+    {
+        return self::html_tag('link', '', $attrs, true);
+    }
+
+    public static function html_script($content = '', array $attrs = []): string
+    {
+        return self::html_tag('script', $content, $attrs);
+    }
+
+    public static function html_style($content = '', array $attrs = []): string
+    {
+        return self::html_tag('style', $content, $attrs);
+    }
+
+    /**
+     * Pretty‑print a chunk of HTML.
+     *
+     * @param string $html Unformatted HTML fragment.
+     * @return string Formatted HTML with line breaks and indentation.
+     */
+    public static function pretty_html(string $html): string
+    {
+        $dom = new \DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+
+        @$dom->loadHTML(
+            '<?xml encoding="utf-8"?>' . $html,
+            LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD
+        );
+
+        $out = $dom->saveHTML();
+        return preg_replace('/^<\?xml.*?\?>\s*/', '', $out);
+    }
+
+    /*  Example
+     
+        $html = Microfy::html_div([
+            Microfy::html_h1('Hello'),
+            Microfy::html_br(),
+            Microfy::html_img(['src' => 'pic.jpg', 'alt' => 'image'])
+        ]);
+
+        echo Microfy::pretty_html($html); */
+
+    /* ---------END---------- */
 }
