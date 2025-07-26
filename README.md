@@ -26,7 +26,7 @@ Forget frameworks when all you need is power and speed — **Microfy** is your c
 
 ---
 
-## ✨ Features
+## ✨ Features 
 
 * **Request Access**: `getVar()`, `postVar()`, `requestVar()` and prefixed variants
 * **Debug Tools**: `pp()`, `pd()`, `mpp()`, `mlog()`, with optional returns (`pdd()`, `pdr()`)
@@ -36,6 +36,48 @@ Forget frameworks when all you need is power and speed — **Microfy** is your c
 * **Slugify**: Easily generate SEO-safe slugs
 * **JSON Reader**: `jsonf()` for simple flat-file configs
 * **List Helpers**: `cList()`, `cStr()` for smart numbered headings and counters
+
+#### 🧱 **HTML Builder Functions** (v0.1.04+) 
+
+Use these to generate clean, semantic HTML in PHP — all methods return strings.
+
+#### 📦 Core & Generic
+
+* `tag()`: Low-level generic tag builder
+* `html_tag()`: Alias to `tag()` for semantic grouping
+* `pretty_html()`: Formats raw HTML for human-friendly display
+
+#### 📄 Document Structure
+
+* `html_html()`, `html_head()`, `html_body()`
+* `html_header()`, `html_footer()`, `html_section()`, `html_article()`, `html_nav()`, `html_aside()`
+
+#### 📚 Content Blocks
+
+* `html_div()`, `html_span()`, `html_p()`, `html_blockquote()`, `html_pre()`, `html_code()`
+* `html_h1()` → `html_h6()`
+
+#### 📑 Lists
+
+* `html_ul()`, `html_ol()`, `html_li()`
+* `html_dl()`: Takes an array of `['term' => ..., 'desc' => ...]`
+
+#### 📊 Tables
+
+* `html_table()`, `html_thead()`, `html_tbody()`
+* `html_tr()`, `html_th()`, `html_td()`
+
+#### 📝 Forms
+
+* `html_form()`, `html_label()`, `html_input()`, `html_textarea()`, `html_select()`, `html_button()`
+
+#### 🧩 Self-closing & Inline
+
+* `html_br()`, `html_hr()`, `html_img()`, `html_meta()`, `html_link()`
+
+#### 🔧 Embeds & Styles
+
+* `html_script()`, `html_style()`
 
 ---
 
