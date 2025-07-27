@@ -81,9 +81,6 @@ Use these to generate clean, semantic HTML in PHP — all methods return strings
 
 ---
 
-Here’s a clean, concise addition you can drop into your `README.md`:
-
----
 
 ### 🔁 Echoing Helpers (`e_` aliases)
 
