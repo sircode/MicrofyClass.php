@@ -81,6 +81,31 @@ Use these to generate clean, semantic HTML in PHP — all methods return strings
 
 ---
 
+Here’s a clean, concise addition you can drop into your `README.md`:
+
+---
+
+### 🔁 Echoing Helpers (`e_` aliases)
+
+If you'd rather use functions like `e_p()`, `e_div()`, or `e_html_ul()` instead of writing `echo Microfy::p(...)`, you can include the optional alias file:
+
+```php
+require_once 'microfy_echo_aliases.php';
+```
+
+This file defines convenient `e_` versions of all output-generating methods in `Microfy`. For example:
+
+```php
+e_p("Hello"); // same as echo Microfy::p("Hello");
+e_html_ul(["One", "Two"]); // same as echo Microfy::html_ul([...]);
+```
+
+These aliases are safe, optional, and designed for quick prototyping or simplified views.
+
+> Only methods that return markup or formatted output get `e_` aliases — utilities like `slugify()` or `now()` are excluded.
+
+---
+
 ## 📌 When to Use MicrofyClass.php
 
 Use `MicrofyClass.php` when:
@@ -177,7 +202,7 @@ Microfy::br();
 Microfy::c('Step A');
 ```
 
-More [Examples](https://itnb.com/MicrofyClass/)
+## 📘 [More Examples](https://itnb.com/MicrofyClass/)
 
 ---
 
