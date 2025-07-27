@@ -3,7 +3,7 @@
 /**
  * microfyPHP
  * microfy_aliases.php
- * v0.1.4 
+ * v0.1.5 
  * Author: SirCode
  */
 
@@ -252,9 +252,9 @@ if (!function_exists('hsc')) {
         return Microfy::hsc(...$args);
     }
 }
-if (!function_exists('json')) {
-    function json(...$args) {
-        return Microfy::json(...$args);
+if (!function_exists('sendJson')) {
+    function sendJson(...$args) {
+        return Microfy::sendJson(...$args);
     }
 }
 if (!function_exists('ok')) {
@@ -427,11 +427,7 @@ if (!function_exists('cStr')) {
         return Microfy::cStr(...$args);
     }
 }
-if (!function_exists('classAttr')) {
-    function classAttr(...$args) {
-        return Microfy::classAttr(...$args);
-    }
-}
+
 if (!function_exists('tag')) {
     function tag(...$args) {
         return Microfy::tag(...$args);
