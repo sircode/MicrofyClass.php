@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 /**
  * microfyPHP
  * MicrofyClass.php
- * v0.1.4 
+ * v0.1.5
  * Author: SirCode
  */
 class Microfy
@@ -15,7 +15,6 @@ class Microfy
      *   Arrays
      * ──────────────────────────────────────────────────────────────────────────────
      */
-
 
     // Safe array accessor
     public static function val(array $array, $key, $default = null)
@@ -70,7 +69,7 @@ class Microfy
         $out = [];
         foreach ($map as $var => $rule) {
             [$key, $default] = is_array($rule) ? $rule + ['', ''] : [$rule, ''];
-            $out[$var] = $source[$key] ?? $default;
+            $out[$var]       = $source[$key] ?? $default;
         }
         return $out;
     }
@@ -98,7 +97,7 @@ class Microfy
 
     /**
      * ──────────────────────────────────────────────────────────────────────────────
-     *   Database 
+     *   Database
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
@@ -165,19 +164,18 @@ class Microfy
 
     public static function dbExists(PDO $pdo, string $table, string $column, $value): bool
     {
-        if (!preg_match('/^[a-zA-Z0-9_]+$/', $table)) {
+        if (! preg_match('/^[a-zA-Z0-9_]+$/', $table)) {
             return false; // invalid table name
         }
-        if (!preg_match('/^[a-zA-Z0-9_]+$/', $column)) {
+        if (! preg_match('/^[a-zA-Z0-9_]+$/', $column)) {
             return false; // invalid column name
         }
 
-        $sql = "SELECT 1 FROM `$table` WHERE `$column` = ? LIMIT 1";
+        $sql  = "SELECT 1 FROM `$table` WHERE `$column` = ? LIMIT 1";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([$value]);
         return $stmt->fetchColumn() !== false;
     }
-
 
     public static function dbError(PDOException $e): void
     {
@@ -195,7 +193,6 @@ class Microfy
 
         return $mysqli;
     }
-
 
     /* 
     Usage Examples
@@ -239,7 +236,7 @@ class Microfy
     {
         $output = print_r($data, true);
         if ($limit !== null) {
-            $lines = explode("\n", $output);
+            $lines  = explode("\n", $output);
             $output = implode("\n", array_slice($lines, 0, $limit));
         }
         return "<pre>$output</pre>";
@@ -268,7 +265,10 @@ class Microfy
     {
         ob_start();
         echo "<pre>";
-        if ($label) echo "$label:\n";
+        if ($label) {
+            echo "$label:\n";
+        }
+
         var_dump($var);
         echo "</pre>";
         return ob_get_clean();
@@ -321,27 +321,22 @@ class Microfy
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
-
-
     public static function env(string $key, $default = null)
     {
         return $_ENV[$key] ?? getenv($key) ?: $default;
     }
 
-
-
-
-
     // --- FILES ---
 
     public static function jsonf(string $file, bool $assoc = true)
     {
-        if (!file_exists($file)) return null;
+        if (! file_exists($file)) {
+            return null;
+        }
+
         $content = file_get_contents($file);
         return json_decode($content, $assoc);
     }
-
-
 
     /**
      * ──────────────────────────────────────────────────────────────────────────────
@@ -351,13 +346,13 @@ class Microfy
 
     public static function a(string $href, ?string $text = null, string $target = '', string $class = ''): string
     {
-        if (!preg_match('#^https?://#', $href)) {
+        if (! preg_match('#^https?://#', $href)) {
             $href = "https://$href";
         }
 
-        $text = $text ?? $href;
+        $text       = $text ?? $href;
         $targetAttr = $target ? " target=\"$target\"" : '';
-        $classAttr  = $class  ? " class=\"$class\""   : '';
+        $classAttr  = $class ? " class=\"$class\"" : '';
 
         return "<a href=\"$href\"$targetAttr$classAttr>$text</a>";
     }
@@ -371,25 +366,25 @@ class Microfy
         if (empty($array)) {
             return "<p><em>No data.</em></p>";
         }
-        if (!isset($array[0]) || !is_array($array[0]) || empty($array[0])) {
+        if (! isset($array[0]) || ! is_array($array[0]) || empty($array[0])) {
             return "<p><em>No columns to display.</em></p>";
         }
 
         $idAttr = $id !== ''
-            ? " id='" . htmlspecialchars((string)$id, ENT_QUOTES, 'UTF-8', false) . "'"
-            : '';
+        ? " id='" . htmlspecialchars((string) $id, ENT_QUOTES, 'UTF-8', false) . "'"
+        : '';
         $classAttr = $class !== ''
-            ? " class='" . htmlspecialchars((string)$class, ENT_QUOTES, 'UTF-8', false) . "'"
-            : " border='1' cellpadding='6' cellspacing='0'";
+        ? " class='" . htmlspecialchars((string) $class, ENT_QUOTES, 'UTF-8', false) . "'"
+        : " border='1' cellpadding='6' cellspacing='0'";
 
         $html = "<table{$idAttr}{$classAttr}>";
 
         // thead
         $html .= "<thead><tr>";
         foreach (array_keys($array[0]) as $col) {
-            $colStr = (string)$col;
+            $colStr = (string) $col;
             $html .= '<th>'
-                . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
+            . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
                 . '</th>';
         }
         $html .= "</tr></thead>";
@@ -397,7 +392,7 @@ class Microfy
         // tbody
         $html .= "<tbody>";
         foreach ($array as $row) {
-            if (!is_array($row)) {
+            if (! is_array($row)) {
                 continue; // skip invalid rows
             }
             $html .= "<tr>";
@@ -405,10 +400,10 @@ class Microfy
                 if (is_array($cell) || is_object($cell)) {
                     $cellStr = '';
                 } else {
-                    $cellStr = (string)$cell;
+                    $cellStr = (string) $cell;
                 }
                 $html .= '<td>'
-                    . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
+                . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
                     . '</td>';
             }
             $html .= "</tr>";
@@ -429,12 +424,11 @@ class Microfy
      * @return string                    HTML string of the table (or a “no data” message)
      */
     public static function htmlTable(
-        array  $rows,
-        array  $allowRawCols = [],
-        string $cssClass       = '',
-        string $id          = ''
+        array $rows,
+        array $allowRawCols = [],
+        string $cssClass = '',
+        string $id = ''
     ): string {
-
 
         $array = $rows;
         $class = $cssClass;
@@ -442,26 +436,26 @@ class Microfy
         if (empty($array)) {
             return "<p><em>No data.</em></p>";
         }
-        if (!isset($array[0]) || !is_array($array[0]) || empty($array[0])) {
+        if (! isset($array[0]) || ! is_array($array[0]) || empty($array[0])) {
             return "<p><em>No columns to display.</em></p>";
         }
 
         // build id and class (or default border attrs) safely
         $idAttr = $id !== ''
-            ? " id='" . htmlspecialchars($id, ENT_QUOTES, 'UTF-8', false) . "'"
-            : '';
+        ? " id='" . htmlspecialchars($id, ENT_QUOTES, 'UTF-8', false) . "'"
+        : '';
         $classAttr = $class !== ''
-            ? " class='" . htmlspecialchars($class, ENT_QUOTES, 'UTF-8', false) . "'"
-            : " border='1' cellpadding='6' cellspacing='0'";
+        ? " class='" . htmlspecialchars($class, ENT_QUOTES, 'UTF-8', false) . "'"
+        : " border='1' cellpadding='6' cellspacing='0'";
 
         $html = "<table{$idAttr}{$classAttr}>";
 
         // thead
         $html .= "<thead><tr>";
         foreach (array_keys($array[0]) as $col) {
-            $colStr = (string)$col;
+            $colStr = (string) $col;
             $html .= '<th>'
-                . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
+            . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
                 . '</th>';
         }
         $html .= "</tr></thead>";
@@ -469,7 +463,7 @@ class Microfy
         // tbody
         $html .= "<tbody>";
         foreach ($array as $row) {
-            if (!is_array($row)) {
+            if (! is_array($row)) {
                 continue;
             }
             $html .= "<tr>";
@@ -478,7 +472,7 @@ class Microfy
                 if (is_array($cell) || is_object($cell)) {
                     $cellStr = '';
                 } else {
-                    $cellStr = (string)$cell;
+                    $cellStr = (string) $cell;
                 }
 
                 // if this column is whitelisted, output raw; else escape
@@ -486,7 +480,7 @@ class Microfy
                     $html .= "<td>{$cellStr}</td>";
                 } else {
                     $html .= '<td>'
-                        . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
+                    . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
                         . '</td>';
                 }
             }
@@ -497,23 +491,24 @@ class Microfy
         return $html;
     }
 
-
-
-
     /**
      * ──────────────────────────────────────────────────────────────────────────────
      *   MISC OUTPUT
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
-    public static function cList(array $items, bool $reset = false): void
+    public static function cList(array $items, bool $reset = false): string
     {
         static $counter = 1;
-        if ($reset) $counter = 1;
-
-        foreach ($items as $item) {
-            echo $counter++ . '. ' . $item . '<br>';
+        if ($reset) {
+            $counter = 1;
         }
+
+        $output = '';
+        foreach ($items as $item) {
+            $output .= $counter++ . '. ' . $item . '<br>';
+        }
+        return $output;
     }
 
     public static function now(string $format = 'Y-m-d H:i:s'): string
@@ -540,12 +535,10 @@ class Microfy
 
     public static function def(string $name, $value): void
     {
-        if (!defined($name)) {
+        if (! defined($name)) {
             define($name, $value);
         }
     }
-
-
 
     /**
      * ──────────────────────────────────────────────────────────────────────────────
@@ -553,12 +546,12 @@ class Microfy
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
-    public static function hsc(string $str): void
+    public static function hsc(string $str): string
     {
-        echo htmlspecialchars($str);
+        return htmlspecialchars($str);
     }
 
-    public static function json($data): void
+    public static function sendJson($data): void
     {
         header('Content-Type: application/json');
         echo json_encode($data);
@@ -567,12 +560,12 @@ class Microfy
 
     public static function ok(string $msg = 'OK'): void
     {
-        self::json(['status' => 'ok', 'msg' => $msg]);
+        self::sendJson(['status' => 'ok', 'msg' => $msg]);
     }
 
     public static function fail(string $msg = 'Error'): void
     {
-        self::json(['status' => 'fail', 'msg' => $msg]);
+        self::sendJson(['status' => 'fail', 'msg' => $msg]);
     }
 
     public static function jsonArray(array $data): string
@@ -588,7 +581,6 @@ class Microfy
         ]);
     }
 
-
     // --- STRING ---
 
     public static function slugify(string $string): string
@@ -598,19 +590,17 @@ class Microfy
         return trim($string, '-');
     }
 
-
-
     /**
      * ──────────────────────────────────────────────────────────────────────────────
      *   STYLE / HTML OUTPUT
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
-    public static function h(int $level, string $text, string $class = ''): void
+    public static function h(int $level, string $text, string $class = ''): string
     {
-        $level = max(1, min(6, $level));
+        $level     = max(1, min(6, $level));
         $classAttr = $class ? " class=\"$class\"" : '';
-        echo "<h$level$classAttr>$text</h$level>";
+        return "<h$level$classAttr>$text</h$level>";
     }
 
     public static function b(string $text = '', string $class = ''): string
@@ -643,7 +633,6 @@ class Microfy
         return "<mark$classAttr>$text</mark>";
     }
 
-
     /* 
     Example Usage
     Microfy::def('APP_NAME', 'microfy');
@@ -656,35 +645,29 @@ class Microfy
 
     */
 
-
-
-
-
-
     /**
      * ──────────────────────────────────────────────────────────────────────────────
      *   BLOCK ELEMENTS
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
-    public static function p(string $text = '', string $class = ''): void
+    public static function p(string $text = '', string $class = ''): string
     {
-        echo "<p" . self::classAttr($class) . ">$text</p>";
+        return "<p" . self::classAttr($class) . ">$text</p>";
     }
 
-    public static function span(string $text = '', string $class = ''): void
+    public static function span(string $text = '', string $class = ''): string
     {
-        echo "<span" . self::classAttr($class) . ">$text</span>";
+        return "<span" . self::classAttr($class) . ">$text</span>";
     }
-
     public static function div(string $text, array $attrs = []): string
     {
         $attrStr = self::buildAttr($attrs);
         return "<div$attrStr>$text</div>";
     }
-    public static function section(string $text = '', string $class = ''): void
+    public static function section(string $text = '', string $class = ''): string
     {
-        echo "<section" . self::classAttr($class) . ">$text</section>";
+        return "<section" . self::classAttr($class) . ">$text</section>";
     }
 
     public static function buildAttr(array $attrs): string
@@ -697,49 +680,52 @@ class Microfy
         return $parts ? ' ' . implode(' ', $parts) : '';
     }
 
-
     /**
      * ──────────────────────────────────────────────────────────────────────────────
      *   CODE BLOCKS
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
-    public static function code(string $content, string $lang = ''): void
+    public static function code(string $content, string $lang = ''): string
     {
         $class = $lang ? " class=\"language-$lang\"" : '';
-        echo "<pre><code$class>" . htmlspecialchars($content) . "</code></pre>";
+        return "<pre><code$class>" . htmlspecialchars($content) . "</code></pre>";
     }
 
-    public static function codejs(string $text): void
+    public static function codejs(string $text): string
     {
-        self::code($text, 'js');
-    }
-    public static function codephp(string $text): void
-    {
-        self::code($text, 'php');
-    }
-    public static function codejson(string $text): void
-    {
-        self::code($text, 'json');
-    }
-    public static function codehtml(string $text): void
-    {
-        self::code($text, 'html');
-    }
-    public static function codesql(string $text): void
-    {
-        self::code($text, 'sql');
-    }
-    public static function codebash(string $text): void
-    {
-        self::code($text, 'bash');
-    }
-    public static function codec(string $text): void
-    {
-        self::code($text, 'c');
+        return self::code($text, 'js');
     }
 
+    public static function codephp(string $text): string
+    {
+        return self::code($text, 'php');
+    }
 
+    public static function codejson(string $text): string
+    {
+        return self::code($text, 'json');
+    }
+
+    public static function codehtml(string $text): string
+    {
+        return self::code($text, 'html');
+    }
+
+    public static function codesql(string $text): string
+    {
+        return self::code($text, 'sql');
+    }
+
+    public static function codebash(string $text): string
+    {
+        return self::code($text, 'bash');
+    }
+
+    public static function codec(string $text): string
+    {
+        return self::code($text, 'c');
+    }
 
     /**
      * ──────────────────────────────────────────────────────────────────────────────
@@ -747,28 +733,30 @@ class Microfy
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
-    public static function ul(array $items, string $class = ''): void
+    public static function ul(array $items, string $class = ''): string
     {
-        echo "<ul" . self::classAttr($class) . ">";
+        $html = "<ul" . self::classAttr($class) . ">";
         foreach ($items as $item) {
-            echo "<li>$item</li>";
+            $html .= "<li>$item</li>";
         }
-        echo "</ul>";
+        $html .= "</ul>";
+        return $html;
     }
 
-    public static function ulOpen(): void
+    public static function ulOpen(string $class = ''): string
     {
-        echo "<ul>";
-    }
-    public static function ulClose(): void
-    {
-        echo "</ul>";
-    }
-    public static function li(string $text): void
-    {
-        echo "<li>$text</li>";
+        return "<ul" . self::classAttr($class) . ">";
     }
 
+    public static function ulClose(): string
+    {
+        return "</ul>";
+    }
+
+    public static function li(string $text): string
+    {
+        return "<li>$text</li>";
+    }
 
     /**
      * ──────────────────────────────────────────────────────────────────────────────
@@ -776,36 +764,64 @@ class Microfy
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
-    public static function br(...$args): void
+    public static function br(...$args): string
     {
-        if (empty($args)) echo '<br>';
-        else foreach ($args as $arg) echo '<br>' . $arg;
+        if (empty($args)) {
+            return '<br>';
+        }
+
+        $output = '';
+        foreach ($args as $arg) {
+            $output .= '<br>' . $arg;
+        }
+        return $output;
     }
 
-    public static function bra(...$args): void
+    public static function bra(...$args): string
     {
-        if (empty($args)) echo '<br>';
-        else foreach ($args as $arg) echo $arg . '<br>';
+        if (empty($args)) {
+            return '<br>';
+        }
+
+        $output = '';
+        foreach ($args as $arg) {
+            $output .= $arg . '<br>';
+        }
+        return $output;
     }
 
-    public static function hr(...$args): void
+    public static function hr(...$args): string
     {
-        if (empty($args)) echo '<hr>';
-        else foreach ($args as $arg) echo '<hr>' . $arg;
+        if (empty($args)) {
+            return '<hr>';
+        }
+
+        $output = '';
+        foreach ($args as $arg) {
+            $output .= '<hr>' . $arg;
+        }
+        return $output;
     }
 
-    public static function hra(...$args): void
+    public static function hra(...$args): string
     {
-        if (empty($args)) echo '<hr>';
-        else foreach ($args as $arg) echo $arg . '<hr>';
+        if (empty($args)) {
+            return '<hr>';
+        }
+
+        $output = '';
+        foreach ($args as $arg) {
+            $output .= $arg . '<hr>';
+        }
+        return $output;
     }
 
     // --- COUNTER ---
 
-    public static function c(string $text = ''): void
+    public static function c(string $text = ''): string
     {
         static $counter = 1;
-        echo $counter++ . '. ' . $text;
+        return $counter++ . '. ' . $text;
     }
 
     public static function cStr(string $text = ''): string
@@ -829,20 +845,18 @@ class Microfy
     Microfy::br();
     Microfy::c('Step A'); */
 
-
     /**
      * ──────────────────────────────────────────────────────────────────────────────
      *  HTML HELPERS 2
      * ──────────────────────────────────────────────────────────────────────────────
      */
 
-
     // Core tag builder
     public static function tag(string $tag, $content = '', array $attrs = [], bool $selfClose = false): string
     {
         $attrStrings = [];
         foreach ($attrs as $k => $v) {
-            $attrStrings[] = sprintf('%s="%s"', $k, htmlspecialchars((string)$v, ENT_QUOTES));
+            $attrStrings[] = sprintf('%s="%s"', $k, htmlspecialchars((string) $v, ENT_QUOTES));
         }
         $attrString = $attrStrings ? ' ' . implode(' ', $attrStrings) : '';
 
@@ -868,7 +882,6 @@ class Microfy
     {
         return self::html_tag('html', $content, $attrs);
     }
-
 
     public static function html_head($content = '', array $attrs = []): string
     {
@@ -950,11 +963,9 @@ class Microfy
         return self::html_tag('h6', $content, $attrs);
     }
 
-
-
     public static function html_p($content = '', array $attrs = []): string
     {
-        return self::html_tag('p', htmlspecialchars((string)$content), $attrs);
+        return self::html_tag('p', htmlspecialchars((string) $content), $attrs);
     }
 
     public static function html_blockquote($content = '', array $attrs = []): string
@@ -964,12 +975,12 @@ class Microfy
 
     public static function html_pre($content = '', array $attrs = []): string
     {
-        return self::html_tag('pre', htmlspecialchars((string)$content), $attrs);
+        return self::html_tag('pre', htmlspecialchars((string) $content), $attrs);
     }
 
     public static function html_code($content = '', array $attrs = []): string
     {
-        return self::html_tag('code', htmlspecialchars((string)$content), $attrs);
+        return self::html_tag('code', htmlspecialchars((string) $content), $attrs);
     }
 
     public static function html_ul(array $items, array $attrs = []): string
@@ -993,12 +1004,11 @@ class Microfy
     {
         $children = [];
         foreach ($terms as $t) {
-            $children[] = self::tag('dt', htmlspecialchars((string)$t['term']));
-            $children[] = self::tag('dd', htmlspecialchars((string)$t['desc']));
+            $children[] = self::tag('dt', htmlspecialchars((string) $t['term']));
+            $children[] = self::tag('dd', htmlspecialchars((string) $t['desc']));
         }
         return self::html_tag('dl', $children, $attrs);
     }
-
 
     /*  Sample usage
 
@@ -1047,7 +1057,7 @@ class Microfy
 
     public static function html_label($content = '', array $attrs = []): string
     {
-        return self::html_tag('label', htmlspecialchars((string)$content), $attrs);
+        return self::html_tag('label', htmlspecialchars((string) $content), $attrs);
     }
 
     public static function html_input(array $attrs = []): string
@@ -1057,14 +1067,14 @@ class Microfy
 
     public static function html_textarea($content = '', array $attrs = []): string
     {
-        return self::html_tag('textarea', htmlspecialchars((string)$content), $attrs);
+        return self::html_tag('textarea', htmlspecialchars((string) $content), $attrs);
     }
 
     public static function html_select(array $options, array $attrs = []): string
     {
         $opts = [];
         foreach ($options as $value => $text) {
-            $opts[] = self::tag('option', htmlspecialchars((string)$text), ['value' => (string)$value]);
+            $opts[] = self::tag('option', htmlspecialchars((string) $text), ['value' => (string) $value]);
         }
         return self::html_tag('select', $opts, $attrs);
     }
@@ -1079,7 +1089,6 @@ class Microfy
             Microfy::html_button('Send', ['type' => 'submit']),
             ['method' => 'post']
         ); */
-
 
     /* Self-closing and embedded content methods */
 
@@ -1126,9 +1135,9 @@ class Microfy
      */
     public static function pretty_html(string $html): string
     {
-        $dom = new \DOMDocument();
+        $dom                     = new \DOMDocument();
         $dom->preserveWhiteSpace = false;
-        $dom->formatOutput = true;
+        $dom->formatOutput       = true;
 
         @$dom->loadHTML(
             '<?xml encoding="utf-8"?>' . $html,
