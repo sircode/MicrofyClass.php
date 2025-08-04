@@ -8,7 +8,7 @@ Status: EXPERIMENTAL
 
 ## 🧰 What is it?
 
-**MicrofyClass.php** is the object-oriented version of [`microfyPHP-pp`](https://github.com/sircode/microfyPHP-pp) — a minimalist utility class packed with static helper methods to simplify everyday PHP development.
+**MicrofyClass.php** is the object-oriented version of [`microfyPHP-Lite`](https://github.com/sircode/microfyPHP-Lite) — a minimalist utility class packed with static helper methods to simplify everyday PHP development.
 
 It brings the same no-bloat, no-dependency philosophy — now in a class-based format — offering tools for request handling, debugging, logging, HTML snippets, database access, and more.
 
