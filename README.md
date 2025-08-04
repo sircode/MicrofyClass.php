@@ -199,7 +199,7 @@ Microfy::br();
 Microfy::c('Step A');
 ```
 
-## 📘 [More Examples](https://itnb.com/microfyPHP/)
+## 📘 [More Examples](https://itnb.com/microfyphp/)
 
 ---
 
