@@ -87,6 +87,20 @@ if (!function_exists('dbAll')) {
         return Microfy::dbAll(...$args);
     }
 }
+if (!function_exists('dbInsert')) {
+    function dbInsert(...$args) {
+        return Microfy::dbInsert(...$args);
+    }
+}
+if (!function_exists('dbUpdate')) {
+    function dbUpdate(...$args) {
+        return Microfy::dbUpdate(...$args);
+    }
+}if (!function_exists('dbDelete')) {
+    function dbDelete(...$args) {
+        return Microfy::dbDelete(...$args);
+    }
+}
 if (!function_exists('dbOne')) {
     function dbOne(...$args) {
         return Microfy::dbOne(...$args);
