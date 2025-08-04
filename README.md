@@ -220,7 +220,7 @@ Use at your own risk — no warranties, no guarantees, just useful code.
 ### 📦 Also Available as Procedural Version
 
 Prefer short global functions like `pp()`, `getVar()`, or `dbAll()`?
-👉 [`microfyPHP-Lite`](https://github.com/sircode/microfyPHP-Lite) offers the same features — no classes required.
+👉 [`microfyPHP-Lite`](https://github.com/sircode/microfyphp-lite) offers the same features — no classes required.
 
 
 ---
