@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 /**
  * microfyPHP
  * MicrofyClass.php
@@ -131,6 +131,34 @@ class Microfy
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC); // <-- fix here
     }
+
+    public static function dbInsert(PDO $pdo, string $table, array $data): string
+    {
+        $cols = array_keys($data);
+        $placeholders = array_fill(0, count($data), '?');
+        $sql = "INSERT INTO `$table` (`" . implode('`,`', $cols) . "`) VALUES (" . implode(',', $placeholders) . ")";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(array_values($data));
+        return $pdo->lastInsertId();
+    }
+
+    public static function dbUpdate(PDO $pdo, string $table, array $data, string $where, array $params = []): bool
+    {
+        $set = implode(', ', array_map(fn($col) => "`$col` = ?", array_keys($data)));
+        $sql = "UPDATE `$table` SET $set WHERE $where";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute(array_merge(array_values($data), $params));
+    }
+
+    public static function dbDelete(PDO $pdo, string $table, string $where, array $params = []): bool
+    {
+        $sql = "DELETE FROM `$table` WHERE $where";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+
+
 
     public static function dbOne(PDO $pdo, string $sql, array $params = []): mixed
     {
@@ -371,11 +399,11 @@ class Microfy
         }
 
         $idAttr = $id !== ''
-        ? " id='" . htmlspecialchars((string) $id, ENT_QUOTES, 'UTF-8', false) . "'"
-        : '';
+            ? " id='" . htmlspecialchars((string) $id, ENT_QUOTES, 'UTF-8', false) . "'"
+            : '';
         $classAttr = $class !== ''
-        ? " class='" . htmlspecialchars((string) $class, ENT_QUOTES, 'UTF-8', false) . "'"
-        : " border='1' cellpadding='6' cellspacing='0'";
+            ? " class='" . htmlspecialchars((string) $class, ENT_QUOTES, 'UTF-8', false) . "'"
+            : " border='1' cellpadding='6' cellspacing='0'";
 
         $html = "<table{$idAttr}{$classAttr}>";
 
@@ -384,7 +412,7 @@ class Microfy
         foreach (array_keys($array[0]) as $col) {
             $colStr = (string) $col;
             $html .= '<th>'
-            . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
+                . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
                 . '</th>';
         }
         $html .= "</tr></thead>";
@@ -403,7 +431,7 @@ class Microfy
                     $cellStr = (string) $cell;
                 }
                 $html .= '<td>'
-                . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
+                    . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
                     . '</td>';
             }
             $html .= "</tr>";
@@ -442,11 +470,11 @@ class Microfy
 
         // build id and class (or default border attrs) safely
         $idAttr = $id !== ''
-        ? " id='" . htmlspecialchars($id, ENT_QUOTES, 'UTF-8', false) . "'"
-        : '';
+            ? " id='" . htmlspecialchars($id, ENT_QUOTES, 'UTF-8', false) . "'"
+            : '';
         $classAttr = $class !== ''
-        ? " class='" . htmlspecialchars($class, ENT_QUOTES, 'UTF-8', false) . "'"
-        : " border='1' cellpadding='6' cellspacing='0'";
+            ? " class='" . htmlspecialchars($class, ENT_QUOTES, 'UTF-8', false) . "'"
+            : " border='1' cellpadding='6' cellspacing='0'";
 
         $html = "<table{$idAttr}{$classAttr}>";
 
@@ -455,7 +483,7 @@ class Microfy
         foreach (array_keys($array[0]) as $col) {
             $colStr = (string) $col;
             $html .= '<th>'
-            . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
+                . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
                 . '</th>';
         }
         $html .= "</tr></thead>";
@@ -480,7 +508,7 @@ class Microfy
                     $html .= "<td>{$cellStr}</td>";
                 } else {
                     $html .= '<td>'
-                    . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
+                        . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
                         . '</td>';
                 }
             }
