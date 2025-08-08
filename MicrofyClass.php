@@ -4,7 +4,7 @@ declare(strict_types=1);
 /**
  * microfyPHP
  * MicrofyClass.php
- * v0.1.5
+ * v0.1.6
  * Author: SirCode
  */
 class Microfy
@@ -385,54 +385,46 @@ class Microfy
         return "<a href=\"$href\"$targetAttr$classAttr>$text</a>";
     }
 
-    public static function htmlTableSafe(array $rows, string $cssClass = '', string $id = ''): string
-    {
-
-        $array = $rows;
-        $class = $cssClass;
-
-        if (empty($array)) {
+    public static function htmlTableSafe(
+        array $rows,
+        string $cssClass = '',
+        string $id = ''
+    ): string {
+        if (empty($rows)) {
             return "<p><em>No data.</em></p>";
         }
-        if (! isset($array[0]) || ! is_array($array[0]) || empty($array[0])) {
+
+        if (!isset($rows[0]) || !is_array($rows[0]) || empty($rows[0])) {
             return "<p><em>No columns to display.</em></p>";
         }
 
         $idAttr = $id !== ''
-            ? " id='" . htmlspecialchars((string) $id, ENT_QUOTES, 'UTF-8', false) . "'"
+            ? " id='" . htmlspecialchars($id, ENT_QUOTES, 'UTF-8', false) . "'"
             : '';
-        $classAttr = $class !== ''
-            ? " class='" . htmlspecialchars((string) $class, ENT_QUOTES, 'UTF-8', false) . "'"
+
+        $classAttr = $cssClass !== ''
+            ? " class='" . htmlspecialchars($cssClass, ENT_QUOTES, 'UTF-8', false) . "'"
             : " border='1' cellpadding='6' cellspacing='0'";
 
         $html = "<table{$idAttr}{$classAttr}>";
 
         // thead
         $html .= "<thead><tr>";
-        foreach (array_keys($array[0]) as $col) {
-            $colStr = (string) $col;
-            $html .= '<th>'
-                . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
-                . '</th>';
+        foreach (array_keys($rows[0]) as $field) {
+            $html .= '<th>' . htmlspecialchars((string) $field, ENT_QUOTES, 'UTF-8', false) . '</th>';
         }
         $html .= "</tr></thead>";
 
         // tbody
         $html .= "<tbody>";
-        foreach ($array as $row) {
-            if (! is_array($row)) {
-                continue; // skip invalid rows
-            }
+        foreach ($rows as $row) {
+            if (!is_array($row)) continue;
             $html .= "<tr>";
-            foreach ($row as $cell) {
-                if (is_array($cell) || is_object($cell)) {
-                    $cellStr = '';
-                } else {
-                    $cellStr = (string) $cell;
-                }
-                $html .= '<td>'
-                    . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
-                    . '</td>';
+            foreach ($row as $value) {
+                $cellStr = is_scalar($value) && !is_bool($value)
+                    ? (string) $value
+                    : '';
+                $html .= '<td>' . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false) . '</td>';
             }
             $html .= "</tr>";
         }
@@ -441,75 +433,66 @@ class Microfy
         return $html;
     }
 
+
     /**
-     * Builds an HTML table, escaping every cell by default—
+     * Renders an HTML table, escaping every cell by default—
      * but allowing raw HTML in any column you whitelist.
      *
      * @param array       $rows         Row-data, as an array of associative arrays
-     * @param string[]    $allowRawCols  Column-names whose values are already-safe HTML
-     * @param string      $cssClass         Optional CSS class
-     * @param string      $id            Optional element ID
-     * @return string                    HTML string of the table (or a “no data” message)
+     * @param string[]    $allowRawCols Column-names whose values are already-safe HTML
+     * @param string      $cssClass     Optional CSS class
+     * @param string      $id           Optional element ID
+     * @return string                   HTML string of the table (or a “no data” message)
      */
     public static function htmlTable(
         array $rows,
         array $allowRawCols = [],
-        string $cssClass = '',
-        string $id = ''
+        string $id = '',
+        string $cssClass = ''
     ): string {
-
-        $array = $rows;
-        $class = $cssClass;
-
-        if (empty($array)) {
+        if (empty($rows)) {
             return "<p><em>No data.</em></p>";
         }
-        if (! isset($array[0]) || ! is_array($array[0]) || empty($array[0])) {
+
+        if (!isset($rows[0]) || !is_array($rows[0]) || empty($rows[0])) {
             return "<p><em>No columns to display.</em></p>";
         }
 
-        // build id and class (or default border attrs) safely
+        // id and class (or fallback border attributes)
         $idAttr = $id !== ''
             ? " id='" . htmlspecialchars($id, ENT_QUOTES, 'UTF-8', false) . "'"
             : '';
-        $classAttr = $class !== ''
-            ? " class='" . htmlspecialchars($class, ENT_QUOTES, 'UTF-8', false) . "'"
+
+        $classAttr = $cssClass !== ''
+            ? " class='" . htmlspecialchars($cssClass, ENT_QUOTES, 'UTF-8', false) . "'"
             : " border='1' cellpadding='6' cellspacing='0'";
 
         $html = "<table{$idAttr}{$classAttr}>";
 
         // thead
         $html .= "<thead><tr>";
-        foreach (array_keys($array[0]) as $col) {
-            $colStr = (string) $col;
-            $html .= '<th>'
-                . htmlspecialchars($colStr, ENT_QUOTES, 'UTF-8', false)
-                . '</th>';
+        foreach (array_keys($rows[0]) as $field) {
+            $html .= '<th>' . htmlspecialchars((string) $field, ENT_QUOTES, 'UTF-8', false) . '</th>';
         }
         $html .= "</tr></thead>";
 
         // tbody
         $html .= "<tbody>";
-        foreach ($array as $row) {
-            if (! is_array($row)) {
+        foreach ($rows as $row) {
+            if (!is_array($row)) {
                 continue;
             }
-            $html .= "<tr>";
-            foreach ($row as $col => $cell) {
-                // normalize to string
-                if (is_array($cell) || is_object($cell)) {
-                    $cellStr = '';
-                } else {
-                    $cellStr = (string) $cell;
-                }
 
-                // if this column is whitelisted, output raw; else escape
-                if (in_array($col, $allowRawCols, true)) {
+            $html .= "<tr>";
+            foreach ($row as $field => $value) {
+                $cellStr = is_scalar($value) && !is_bool($value)
+                    ? (string) $value
+                    : '';
+
+                if (in_array($field, $allowRawCols, true)) {
                     $html .= "<td>{$cellStr}</td>";
                 } else {
-                    $html .= '<td>'
-                        . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false)
-                        . '</td>';
+                    $html .= '<td>' . htmlspecialchars($cellStr, ENT_QUOTES, 'UTF-8', false) . '</td>';
                 }
             }
             $html .= "</tr>";
@@ -518,6 +501,7 @@ class Microfy
 
         return $html;
     }
+
 
     /**
      * ──────────────────────────────────────────────────────────────────────────────
@@ -690,7 +674,7 @@ class Microfy
     }
     public static function div(string $text, array $attrs = []): string
     {
-        $attrStr = self::buildAttr($attrs);
+        $attrStr = self::Attr($attrs);
         return "<div$attrStr>$text</div>";
     }
     public static function section(string $text = '', string $class = ''): string
@@ -698,7 +682,7 @@ class Microfy
         return "<section" . self::classAttr($class) . ">$text</section>";
     }
 
-    public static function buildAttr(array $attrs): string
+    public static function Attr(array $attrs): string
     {
         $parts = [];
         foreach ($attrs as $k => $v) {
